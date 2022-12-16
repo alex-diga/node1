@@ -1,0 +1,17 @@
+{
+  "name": "node1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-cmd": "^5.0.0",
+    "os-utils": "^0.0.14"
+  }
+}

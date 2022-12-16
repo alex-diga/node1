@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" class="gray-mode">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+  <h1 title="1换行&#10;2回车&#13;3换行&#xa;4回车&#xd;5">标题一</h1>
+  <h2>标题二</h2>
+  <h3>标题三</h3>
+  <h4>标题四</h4>
+  <h5>标题五</h5>
+  <img src="./imgs/robot.png" alt="">
+  <img src="./imgs/snow.webp" alt="">
+
+  <!-- <div class="bg">
+    <div>Normal</div>
+    <div class="g-filter">filter</div>
+    <div class="g-backdrop-filter">backdrop-filter</div>
+  </div> -->
+</body>
+<svg xmlns="https://www.w3.org/2000/svg">
+  <filter id="grayscale">
+    <feColorMatrix type="matrix"
+      values="0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0" />
+  </filter>
+</svg>
+<script>
+  // const socket = new WebSocket(`ws://${window.location.host}/runLog`);
+  const socket = new WebSocket(`ws://127.0.0.1:3666/runLog`);
+  socket.addEventListener('open', function (event) {
+    console.log('socket is open')
+  });
+
+  socket.addEventListener('message', function (event) {
+    console.log('Message from server', event.data);
+  });
+</script>
+
+</html>
