@@ -8,13 +8,15 @@ const __dirname = dirname(__filename);
 
 const logger = createWriteStream(join(__dirname, './log.txt'), {
   //如果要把内容追加到文件原有的内容的后面，则设置flags为'a',此时设置start无效
-  flags: 'w', 
+  flags: 'w',
 });
 
 function pipeFileToResponse(res, file, type) {
   if (type) {
     res.writeHead(200, {
       'Content-Type': type,
+      // 设置允许跨域的域名，*代表允许任意域名跨域
+      'Access-Control-Allow-Origin': '*'
     });
   }
   createReadStream(join(__dirname, file)).pipe(res);
@@ -37,7 +39,11 @@ const server = http.createServer(function (req, res) {
     pathname = '/index.html';
   }
   if (pathname === '/api') {
-    pipeFileToResponse(res, './result.json');
+    res.writeHead(200, {
+      // 设置允许跨域的域名，*代表允许任意域名跨域
+      'Access-Control-Allow-Origin': '*',
+    });
+    res.end(JSON.stringify({ code: 0, data: {} }));
   } else if (pathname === '/json') {
     pipeFileToResponse(res, './result.json');
   } else if (urlList.includes(pathname)) {

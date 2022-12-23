@@ -1,10 +1,18 @@
-function main() {
-  const res = [1, 2, 3].filter(item => item === 4);
-  console.log(res)
-  // const res = Math.ceil(0 / 10);
-  // const res = test(fromArray(5));
-  // const res1 = test(fromArray(15));
-  // console.log(res, res1)
+function testRege() {
+  const str = `
+'\r\n"(PDH-CSV 4.0)","\\\\��\\Network Interface(Realtek Gaming 2.5GbE Family Controller)\\Bytes Received/sec"\r\n"12/19/2022 16:50:00.782","8982.250254"\r\n�����˳������Ժ�...                        \r\n����ɹ�������\r\n\r\r'
+`;
+
+const regE = /sec"\r\n"(.*)","(.*)"\r\n/i;
+
+// str.replace(regE, (_, val1, val2) => {
+//   console.log(val1, val2);
+// })
+// const res1 = str.match(regE);
+const res = regE.exec(str);
+const res1 = str.match(regE);
+// console.log(res[1], res[2])
+console.log(res1)
 }
 
 function fromArray(length = 1) {
@@ -15,11 +23,23 @@ function test(list) {
   if (list.length) {
     for(let i = 0; i < list.length; i++) {
       if (list[i] > 10) {
-        return list[i] * 10;
+        // return list[i] * 10;
+        break;
       }
     }
   }
   return 'empty';
+}
+
+function main() {
+  // testRege()
+  // const res = [1, 2, 3].filter(item => item === 4);
+  // console.log(res)
+  // const res = Math.ceil(0 / 10);
+  // const res = test(fromArray(5));
+  // const res1 = test(fromArray(15));
+  // console.log(res, res1)
+  console.log(fromArray(5));
 }
 
 main()
