@@ -18,4 +18,12 @@ function test() {
   console.log(line)
 }
 
-test()
+function test1() {
+  // const pattern=/[`~!@#$^&*()=|{}':;',\\\[\]\.<>\/?~！@#￥……&*（）——|{}【】'；：""'。，、？\s]/g;
+  const pattern = /\s+/g;
+  const str = `wxam: name\n PID:   123456\n age: 12`;
+  const res = str.replace(pattern, '')
+  console.log(res, str)
+}
+
+test1()

@@ -39,7 +39,27 @@ function main() {
   // const res = test(fromArray(5));
   // const res1 = test(fromArray(15));
   // console.log(res, res1)
-  console.log(fromArray(5));
+  // console.log(fromArray(5));
+  // const obj = {
+  //   age: 12,
+  //   name: 'tom',
+  //   code: null
+  // }
+  // const res = JSON.stringify(obj)
+  // console.log(obj, res)
+  // const str = 'abc888';
+  // const str1 = 'ab88';
+
+  // console.log(str.search('88') !== -1, str1.search('88') !== -1)
+
+  testFn('list', 1, (err, list) => {
+    console.log(err, list)
+  })
+}
+
+function testFn(type, ...args) {
+  const [cb] = args.splice(args.length - 1, 1)
+  console.log(type, args, typeof cb)
 }
 
 main()
