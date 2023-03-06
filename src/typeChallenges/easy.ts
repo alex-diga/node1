@@ -27,7 +27,6 @@ type MyReadonly<T> = {
 type todo1 = Readonly<Todo>
 type ReadonlyTodo = MyReadonly<Todo>
 
-
 /* 数组 */
 type FirstArray<T extends any[]> = T extends [infer P, ...infer Rest] ? P : never;
 type FirstList = FirstArray<List>
