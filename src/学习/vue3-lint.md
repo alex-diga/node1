@@ -85,7 +85,8 @@ module.exports = {
   // eslint . 为指定 lint 当前项目中的文件
   // --ext 为指定 lint 哪些后缀的文件
   // --fix 开启自动修复
-  "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix"
+  // "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix"
+  "lint": "eslint src --cache --ext .vue,.js,.ts,.jsx,.tsx"
 }
 ```
 
@@ -233,10 +234,10 @@ extends: [
 
 ## 配置 husky
 
-### 安装 husky
+### 安装 husky 和 lint-staged
 
 ```shell
-pnpm add husky -D
+pnpm add husky lint-staged -D
 ```
 
 ### 添加 prepare 命令
@@ -253,14 +254,30 @@ pnpm add husky -D
 
 ### 执行 prepare 命令
 
-执行 `pnpm prepare`命令，项目新增了一个 `.husky` 目录
+执行 `pnpm prepare` 命令，项目新增了一个 `.husky` 目录
+
+### 配置 lint-staged
+
+在 `package.json` 文件增加 lint-staged 配置
+
+```json
+"lint-staged": {
+  "*.{ts,vue,js,tsx,jsx}": [
+    "prettier --write",
+    "eslint --fix"
+  ],
+  "*.{html,css,less,scss,md}": [
+    "prettier --write"
+  ]
+},
+```
 
 ### 新增 husky 钩子
 
 使用 husky 命令添加 pre-commit 钩子
 
 ```shell
-pnpm husky add .husky/pre-commit "pnpm lint && pnpm format"
+pnpm husky add .husky/pre-commit "npx --no-install lint-staged"
 ```
 
 执行完上面的命令后，会在 .husky 目录下生成一个 pre-commit 文件
@@ -269,13 +286,12 @@ pnpm husky add .husky/pre-commit "pnpm lint && pnpm format"
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm lint && pnpm format
+npx --no-install lint-staged
 ```
 
 ### 效果
 
-当我们提交代码执行 `git commit` 时，会执行 `pnpm lint` 与 `pnpm format` 对代码进行校验修复和格式化。
-当命令报错时，代码不会提交成功，保证了提交代码的质量和格式。
+提交到暂存区的代码也就会被 eslint + prettier 格式化和检查，进一步保证我们的代码规范
 
 ## 参考
 
