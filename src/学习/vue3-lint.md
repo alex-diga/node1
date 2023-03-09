@@ -230,7 +230,137 @@ extends: [
 
 修改完成，重启编辑器(VsCode)
 
-## 配置 styleling
+## 配置 stylelint
+
+### 安装 stylelint
+
+```shell
+pnpm add stylelint postcss postcss-less postcss-html stylelint-config-prettier stylelint-config-recommended-less stylelint-config-standard stylelint-config-standard-vue stylelint-less stylelint-order -D
+```
+
+1. `stylelint`: css 样式 lint 工具
+2. `postcss`: 转换 css 代码工具
+3. `postcss-less`: 识别 less 语法
+4. `postcss-html`: 识别 html/vue 中的 `<style></style>` 标签中的样式
+5. `stylelint-config-standard`: Stylelint 的标准可共享配置规则，详细可查看官方文档
+6. `stylelint-config-prettier`: 关闭所有不必要或可能与 Prettier 冲突的规则
+7. `stylelint-config-recommended-less`: less 的推荐可共享配置规则，详细可查看官方文档
+8. `stylelint-config-standard-vue`: lint.vue 文件的样式配置
+9. `stylelint-less`: stylelint-config-recommended-less 的依赖，less 的 stylelint 规则集合
+10. `stylelint-order`: 指定样式书写的顺序，在 .stylelintrc.js 中 order/properties-order 指定顺序
+
+### 添加 lint:style 配置
+
+在项目更目录新建 `.stylelintrc.js` 配置文件
+
+跟多配置信息可查看[官方文档](https://stylelint.bootcss.com/user-guide/get-started)
+
+```js
+module.exports = {
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-prettier',
+    'stylelint-config-recommended-less',
+    'stylelint-config-standard-vue'
+  ],
+  plugins: ['stylelint-order'],
+  // 不同格式的文件指定自定义语法
+  overrides: [
+    {
+      files: ['**/*.(less|css|vue|html)'],
+      customSyntax: 'postcss-less'
+    },
+    {
+      files: ['**/*.(html|vue)'],
+      customSyntax: 'postcss-html'
+    }
+  ],
+  ignoreFiles: [
+    '**/*.js',
+    '**/*.jsx',
+    '**/*.tsx',
+    '**/*.ts',
+    '**/*.json',
+    '**/*.md',
+    '**/*.yaml'
+  ],
+  rules: {
+    // 禁止在具有较高优先级的选择器后出现被其覆盖的较低优先级的选择器
+    'no-descending-specificity': null,
+    'selector-pseudo-element-no-unknown': [
+      true,
+      {
+        ignorePseudoElements: ['v-deep']
+      }
+    ],
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['deep']
+      }
+    ],
+    // 指定样式的排序
+    'order/properties-order': [
+      'position',
+      'top',
+      'right',
+      'bottom',
+      'left',
+      'z-index',
+      // ...
+    ]
+  }
+}
+```
+
+### 添加 lint:style 命令
+
+
+在 `package.json` 文件 scripts 添加 `lint:style` 命令
+
+```json
+"scripts": {
+  // 格式化 src 文件夹下的 css
+  "lint:style": "stylelint \"./src/**/*.{css,less,vue,html}\" --fix"
+}
+```
+
+### 执行 lint:style 命令
+
+```shell
+pnpm lint:style
+```
+
+### 编辑器配置 Stylelint
+
+#### 安装插件 Stylelint
+
+编辑器(VsCode)扩展搜索 `Stylelint` 选择安装
+
+#### 添加编辑器样式配置
+
+在项目根目录 `.vscode\settings.json` 文件添加配置，设置自动完成格式化
+
+```diff
+{
+  // 保存的时候开启自动修复
+  "editor.codeActionsOnSave": {
+    "source.fixAll": false,
+    "source.fixAll.eslint": true,
++   "source.fixAll.stylelint": true
+  },
+  // 保存的时候自动格式化
+  "editor.formatOnSave": true,
+  // 默认格式化工具选择 prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
++ "stylelint.validate": [
++   "css",
++   "less",
++   "vue",
++   "html"
++  ],
+}
+```
 
 ## 配置 husky
 
@@ -263,10 +393,11 @@ pnpm add husky lint-staged -D
 ```json
 "lint-staged": {
   "*.{ts,vue,js,tsx,jsx}": [
+    "eslint",
     "prettier --write",
-    "eslint --fix"
   ],
   "*.{html,css,less,scss,md}": [
+    "stylelint",
     "prettier --write"
   ]
 },
