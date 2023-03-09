@@ -315,7 +315,6 @@ module.exports = {
 
 ### 添加 lint:style 命令
 
-
 在 `package.json` 文件 scripts 添加 `lint:style` 命令
 
 ```json
@@ -424,7 +423,177 @@ npx --no-install lint-staged
 
 提交到暂存区的代码也就会被 eslint + prettier 格式化和检查，进一步保证我们的代码规范
 
+## 完整配置
+
+### package.json
+
+```json
+{
+  "name": "vue-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "lint": "eslint src --cache --ext .vue,.js,.ts,.jsx,.tsx",
+    "format": "prettier --write --cache \"./src/**/*.{html,vue,ts,js,json,md}\"",
+    "lint:style": "stylelint \"./src/**/*.{css,less,vue,html}\" --fix"
+  },
+  "lint-staged": {
+    "*.{ts,vue,js,tsx,jsx}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.{html,css,less,scss,md}": [
+      "stylelint",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "vue": "^3.2.45"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.6",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.9.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "postcss": "^8.4.21",
+    "postcss-html": "^1.5.0",
+    "postcss-less": "^6.0.0",
+    "prettier": "^2.8.4",
+    "stylelint": "^15.2.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-recommended-less": "^1.0.4",
+    "stylelint-config-standard": "^30.0.1",
+    "stylelint-config-standard-vue": "^1.0.0",
+    "stylelint-less": "^1.0.6",
+    "stylelint-order": "^6.0.3",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0",
+    "vue-tsc": "^1.0.24"
+  }
+}
+```
+
+### .eslintrc.js
+
+```js
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/vue3-essential',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended'
+  ],
+  overrides: [],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 'latest',
+    sourceType: 'module'
+  },
+  plugins: ['vue', '@typescript-eslint'],
+  rules: {}
+}
+```
+
+### .prettierrc.js
+
+```js
+module.exports = {
+  // 一行的字符数，如果超过会进行换行，默认为80
+  printWidth: 80,
+  // 一个tab代表几个空格数，默认为2
+  tabWidth: 2,
+  // 是否使用tab进行缩进，默认为false，表示用空格进行缩减
+  useTabs: false,
+  // 字符串是否使用单引号，默认为false，使用双引号
+  singleQuote: true,
+  // 行位是否使用分号，默认为true
+  semi: false,
+  // 是否使用尾逗号，有三个可选值"<none|es5|all>"
+  trailingComma: "none",
+  // 对象大括号直接是否有空格，默认为true，效果：{ foo: bar }
+  bracketSpacing: true
+}
+```
+
+### .stylelintrc.js
+
+```js
+module.exports = {
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-prettier',
+    'stylelint-config-recommended-less',
+    'stylelint-config-standard-vue'
+  ],
+  plugins: ['stylelint-order'],
+  // 不同格式的文件指定自定义语法
+  overrides: [
+    {
+      files: ['**/*.(less|css|vue|html)'],
+      customSyntax: 'postcss-less'
+    },
+    {
+      files: ['**/*.(html|vue)'],
+      customSyntax: 'postcss-html'
+    }
+  ],
+  ignoreFiles: [
+    '**/*.js',
+    '**/*.jsx',
+    '**/*.tsx',
+    '**/*.ts',
+    '**/*.json',
+    '**/*.md',
+    '**/*.yaml'
+  ],
+  rules: {
+    // 禁止在具有较高优先级的选择器后出现被其覆盖的较低优先级的选择器
+    'no-descending-specificity': null,
+    'selector-pseudo-element-no-unknown': [
+      true,
+      {
+        ignorePseudoElements: ['v-deep']
+      }
+    ],
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['deep']
+      }
+    ],
+  }
+}
+```
+
 ## 参考
 
-1. [eslintrc-schemastore](https://json.schemastore.org/eslintrc)
-1. [prettierrc-schemastore](https://json.schemastore.org/prettierrc)
+1. [vite](https://cn.vitejs.dev/guide/)
+2. [eslint](http://eslint.cn/docs/user-guide/getting-started)
+3. [prettier](https://www.prettier.cn/docs/index.html)
+4. [stylelint](https://stylelint.bootcss.com/user-guide/get-started)
+5. [husky](https://typicode.github.io/husky/#/)
+6. [eslintrc-schemastore](https://json.schemastore.org/eslintrc)
+7. [prettierrc-schemastore](https://json.schemastore.org/prettierrc)
+8. [stylelintrc-schemastore](https://json.schemastore.org/stylelintrc)
+9. [husky 使用总结](https://zhuanlan.zhihu.com/p/366786798)
+10. [vue3 + ts + vite 项目](https://juejin.cn/post/7118294114734440455)
+11. [vite + vue3 + ts 代码自动格式化](https://juejin.cn/post/7022720509875847182)
+12. [项目集成 husky 与 lint-staged](https://juejin.cn/post/7103889661465985038)
+13. [ESlint + Stylelint + VSCode自动格式化代码](https://zhuanlan.zhihu.com/p/94175872)
